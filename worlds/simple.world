@@ -1,0 +1,111 @@
+# simple.world - basic world file example
+# Authors: Richard Vaughan
+# $Id$
+
+include "map.inc"
+
+# time to pause (in GUI mode) or quit (in headless mode (-g)) the simulation
+quit_time 3600 # 1 hour of simulated time
+
+paused 1
+
+define block model
+(
+  size [5 0.3 0.0]
+  gui_nose 0
+)
+
+define sicklaser ranger
+(
+  sensor(
+    range [ 0 5 ]
+    fov 90.0
+    samples 360
+  )
+  color "blue"
+  size [ 0.156 0.155 0.19 ]
+)
+
+define roomba position
+(
+  size [0.33 0.33 0.1]
+
+  # this block approximates the circular shape of a Roomba
+  block( 
+    points 16
+    point[0] [ 0.225 0.000 ]
+    point[1] [ 0.208 0.086 ]
+    point[2] [ 0.159 0.159 ]
+    point[3] [ 0.086 0.208 ]
+    point[4] [ 0.000 0.225 ]
+    point[5] [ -0.086 0.208 ]
+    point[6] [ -0.159 0.159 ]
+    point[7] [ -0.208 0.086 ]
+    point[8] [ -0.225 0.000 ]
+    point[9] [ -0.208 -0.086 ]
+    point[10] [ -0.159 -0.159 ]
+    point[11] [ -0.086 -0.208 ]
+    point[12] [ -0.000 -0.225 ]
+    point[13] [ 0.086 -0.208 ]
+    point[14] [ 0.159 -0.159 ]
+    point[15] [ 0.208 -0.086 ]
+  )
+  color "gray50"
+)
+
+define erratic position
+(
+  size [0.3 0.3 0.25]
+  origin [-0.05 0 0 0]
+  gui_nose 1
+  drive "diff"
+  #sicklaser()	
+   #camera 
+	#( 
+	  # laser properties 
+	  #resolution [ 128 128 ] 
+	  #range [ 0.2 10.0 ] 
+	  #fov [ 40.0 40.0 ] 		
+	  #pantilt [ 0.0 0.0 ] 
+   
+	  # model properties 
+	  #size [ 0.1 0.07 0.05 ] 
+	  #color "black" 
+	  #watts 100.0 # TODO find watts for sony pan-tilt camera 
+	#) 
+)
+
+# configure the GUI window
+window
+(
+  size [ 640.000 640.000 ] # in pixels
+  scale 64   # pixels per meter
+  center [ 0  0 ]
+  rotate [ 0  0 ]
+  			
+  show_data 1              # 1=on 0=off
+)
+
+# load an environment bitmap
+floorplan
+( 
+  name "simple"
+  size [10.000 10.00 0.800]
+  pose [0 0 0 0]
+  bitmap "simple.png"
+  ranger_return 1
+  obstacle_return 1
+  lazer_return 1
+
+)
+
+
+erratic( pose [ -2 -2 0 0.000 ] name "p1r1" color "blue")
+erratic( pose [ 2 -2 0 0.000 ] name "p1r2" color "blue")
+erratic( pose [ -2 2 0 0.000 ] name "p2r1" color "red")
+erratic( pose [ 2 2 0 0.000 ] name "p2r2" color "red")
+block( pose [ 0 4 0 0.000 ] color "green"
+		ranger_return 1
+  obstacle_return 1
+  lazer_return 1)
+
